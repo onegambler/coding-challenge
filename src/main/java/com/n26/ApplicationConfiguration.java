@@ -13,13 +13,16 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.math.BigDecimal;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableScheduling
 public class ApplicationConfiguration {
 
     public static final int CONSUMER_SCHEDULER_TIME_IN_MS = 100;
-    public static final int CONSUMER_SCHEDULER_THREADS_NUM = 5;
+    private static final int CONSUMER_SCHEDULER_THREADS_NUM = 5;
 
     public static final int TRANSACTION_EXPIRATION_SECONDS = 60;
 
@@ -42,5 +45,11 @@ public class ApplicationConfiguration {
         threadPoolTaskScheduler.setPoolSize(CONSUMER_SCHEDULER_THREADS_NUM);
         threadPoolTaskScheduler.setThreadNamePrefix("threadPoolTaskScheduler");
         return threadPoolTaskScheduler;
+    }
+
+    @Bean
+    public ThreadPoolExecutor consumers() {
+        return new ThreadPoolExecutor(CONSUMER_SCHEDULER_THREADS_NUM, CONSUMER_SCHEDULER_THREADS_NUM,
+            0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
     }
 }

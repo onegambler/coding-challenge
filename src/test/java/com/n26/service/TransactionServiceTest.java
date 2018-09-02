@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TransactionServiceTest extends TransactionModelUtil {
@@ -27,13 +28,21 @@ public class TransactionServiceTest extends TransactionModelUtil {
     private TransactionRepository transactionRepository;
     @Mock
     private ApplicationConfiguration applicationConfiguration;
+    @Mock
+    private ThreadPoolExecutor consumers;
 
     private TransactionService transactionService;
 
     @Before
     public void setUp() {
         when(applicationConfiguration.getTransactionExpirationInSeconds()).thenReturn(TRANSACTION_EXPIRATION_SECONDS);
-        transactionService = new TransactionService(transactionRepository, applicationConfiguration);
+
+        transactionService = new TransactionService(transactionRepository, applicationConfiguration, consumers);
+    }
+
+    @Test
+    public void shouldCorrectlyStartConsumersWhenConstructed() {
+
     }
 
     @Test
