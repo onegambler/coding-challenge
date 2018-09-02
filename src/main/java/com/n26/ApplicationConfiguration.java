@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 @EnableScheduling
 public class ApplicationConfiguration {
 
-    public static final int CONSUMER_SCHEDULER_TIME_IN_MS = 100;
     private static final int CONSUMER_SCHEDULER_THREADS_NUM = 5;
 
     public static final int TRANSACTION_EXPIRATION_SECONDS = 60;
@@ -30,7 +29,7 @@ public class ApplicationConfiguration {
     public void configureJackson(ObjectMapper jackson2ObjectMapper) {
         jackson2ObjectMapper.setSerializationInclusion(NON_NULL);
 
-        SimpleModule bigDecimalModule = new SimpleModule("bigDecial")
+        SimpleModule bigDecimalModule = new SimpleModule("bigDecimal")
             .addSerializer(BigDecimal.class, new BigDecimalSerialiser());
         jackson2ObjectMapper.registerModule(bigDecimalModule);
     }

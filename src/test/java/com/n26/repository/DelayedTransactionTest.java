@@ -46,7 +46,7 @@ public class DelayedTransactionTest extends TransactionModelUtil {
     }
 
     @Test
-    public void compareTo_whenTransactionsHaveTheSamexsTimestampThenReturnZero() {
+    public void compareTo_whenTransactionsHaveTheSameTimestampThenReturnZero() {
         final ZonedDateTime now = ZonedDateTime.now();
         final Transaction first = getTransaction(TEN, now);
         final Transaction second = getTransaction(TEN, now);
