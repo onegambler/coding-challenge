@@ -10,10 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.math.BigDecimal;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Configuration
 @EnableScheduling
@@ -33,12 +32,15 @@ public class ApplicationConfiguration {
         jackson2ObjectMapper.registerModule(bigDecimalModule);
     }
 
-    @Bean(destroyMethod = "shutdown")
-    public ExecutorService taskScheduler() {
-        return Executors.newScheduledThreadPool(CONSUMER_SCHEDULER_THREADS_NUM);
-    }
-
     public int getTransactionExpirationInSeconds() {
         return TRANSACTION_EXPIRATION_SECONDS;
+    }
+
+    @Bean(destroyMethod = "shutdown")
+    public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.setPoolSize(CONSUMER_SCHEDULER_THREADS_NUM);
+        threadPoolTaskScheduler.setThreadNamePrefix("threadPoolTaskScheduler");
+        return threadPoolTaskScheduler;
     }
 }
