@@ -19,6 +19,9 @@ import java.util.concurrent.Executors;
 @EnableScheduling
 public class ApplicationConfiguration {
 
+    public static final int CONSUMER_SCHEDULER_TIME_IN_MS = 100;
+    public static final int CONSUMER_SCHEDULER_THREADS_NUM = 5;
+
     public static final int TRANSACTION_EXPIRATION_SECONDS = 60;
 
     @Autowired
@@ -32,7 +35,7 @@ public class ApplicationConfiguration {
 
     @Bean(destroyMethod = "shutdown")
     public ExecutorService taskScheduler() {
-        return Executors.newScheduledThreadPool(2);
+        return Executors.newScheduledThreadPool(CONSUMER_SCHEDULER_THREADS_NUM);
     }
 
     public int getTransactionExpirationInSeconds() {

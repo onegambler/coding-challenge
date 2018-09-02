@@ -4,6 +4,8 @@ import static java.util.Objects.isNull;
 import static lombok.AccessLevel.PRIVATE;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -26,7 +28,9 @@ public class Transaction implements Comparable<Transaction> {
     @NotNull
     private BigDecimal amount;
 
+    @NotNull
     @PastOrPresent
+    @JsonSerialize(using = ZonedDateTimeSerializer.class)
     private ZonedDateTime timestamp;
 
 

@@ -15,8 +15,6 @@ import com.n26.util.TransactionModelUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -29,9 +27,6 @@ public class TransactionServiceTest extends TransactionModelUtil {
     private TransactionRepository transactionRepository;
     @Mock
     private ApplicationConfiguration applicationConfiguration;
-
-    @Captor
-    private ArgumentCaptor<DelayedTransaction> delayedTransactionArgumentCaptor;
 
     private TransactionService transactionService;
 
@@ -49,9 +44,9 @@ public class TransactionServiceTest extends TransactionModelUtil {
         verify(transactionRepository).addTransaction(transaction);
         verifyNoMoreInteractions(transactionRepository);
 
-        assertThat(transactionService.getTransactionsQueue()).hasSize(1);
+        assertThat(transactionService.getTransactionsToExpireAfterDelay()).hasSize(1);
 
-        final DelayedTransaction delayedTransaction = transactionService.getTransactionsQueue().peek();
+        final DelayedTransaction delayedTransaction = transactionService.getTransactionsToExpireAfterDelay().peek();
 
         assertThat(delayedTransaction.getTransaction()).isEqualTo(transaction);
         assertThat(delayedTransaction.getExpirationDelay()).isEqualTo(TRANSACTION_EXPIRATION_SECONDS);
@@ -68,7 +63,7 @@ public class TransactionServiceTest extends TransactionModelUtil {
         verify(transactionRepository).deleteAllTransactions();
         verifyNoMoreInteractions(transactionRepository);
 
-        assertThat(transactionService.getTransactionsQueue()).isEmpty();
+        assertThat(transactionService.getTransactionsToExpireAfterDelay()).isEmpty();
     }
 
     @Test
